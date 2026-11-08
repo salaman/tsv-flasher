@@ -1,0 +1,25 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["react", "react-perf", "typescript", "oxc"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn",
+    "perf": "warn"
+  },
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "react/rules-of-hooks": "error",
+    "react/only-export-components": [
+      "warn",
+      { "allowConstantExport": true, "allowExportNames": ["buttonVariants", "toggleVariants"] }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["src/edl/**/*.ts", "src/catalog.ts", "scripts/**/*.mjs"],
+      "rules": {
+        "no-await-in-loop": "off"
+      }
+    }
+  ]
+}
