@@ -210,7 +210,16 @@ export default function App() {
                             {build.name} {build.version}
                           </strong>
                           <small>
-                            {build.id} / <time dateTime={build.date}>{build.date}</time>
+                            {build.id} / <time dateTime={build.date}>{build.date}</time> /{" "}
+                            <a
+                              className="font-mono underline underline-offset-4"
+                              href={`https://github.com/salaman/tsv-lineage/commit/${build.sourceRevision}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              aria-label={`View source commit ${build.sourceRevision} on GitHub`}
+                            >
+                              {build.sourceRevision.slice(0, 7)}
+                            </a>
                           </small>
                           <span>{build.description}</span>
                         </span>
