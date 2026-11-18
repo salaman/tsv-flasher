@@ -17,7 +17,7 @@ export interface FirmwareBuild {
   readonly id: string;
   readonly name: string;
   readonly version: string;
-  readonly date: string;
+  readonly builtAt: string;
   readonly sourceRevision: string;
   readonly description: string;
   readonly dtbBytes: number;
@@ -160,14 +160,14 @@ function image(value: unknown, name: WritePartitionName, base: URL): FirmwareIma
 
 function build(value: unknown, base: URL): FirmwareBuild {
   const source = object(value, "Build");
-  const date = text(source.date, "Build date", 10);
-  const timestamp = Date.parse(`${date}T00:00:00.000Z`);
+  const builtAt = text(source.builtAt, "Build timestamp (builtAt)", 20);
+  const timestamp = Date.parse(builtAt);
   if (
-    !/^\d{4}-\d{2}-\d{2}$/.test(date) ||
+    !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(builtAt) ||
     !Number.isFinite(timestamp) ||
-    new Date(timestamp).toISOString().slice(0, 10) !== date
+    new Date(timestamp).toISOString() !== builtAt.replace(/Z$/, ".000Z")
   ) {
-    throw new Error("Build dates must be valid YYYY-MM-DD dates.");
+    throw new Error("Build timestamps must be valid UTC timestamps (YYYY-MM-DDTHH:mm:ssZ).");
   }
 
   const images = object(source.images, "Build images");
@@ -187,7 +187,7 @@ function build(value: unknown, base: URL): FirmwareBuild {
     id: identifier(source.id, "Build ID"),
     name: text(source.name, "Build name"),
     version: text(source.version, "Build version", 80),
-    date,
+    builtAt,
     sourceRevision,
     description: text(source.description, "Build description", 400),
     dtbBytes: integer(source.dtbBytes, "DTB size", 1024 * 1024),
@@ -231,7 +231,7 @@ export function parseCatalog(value: unknown, manifestUrl: string): Catalog {
     throw new Error("Build IDs must be unique.");
   }
   builds.sort(
-    (left, right) => right.date.localeCompare(left.date) || right.id.localeCompare(left.id),
+    (left, right) => right.builtAt.localeCompare(left.builtAt) || right.id.localeCompare(left.id),
   );
   return Object.freeze({
     schemaVersion: 1,

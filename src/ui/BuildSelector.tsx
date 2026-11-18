@@ -5,19 +5,21 @@ import { Button } from "../components/ui/button";
 import { RadioGroup, RadioGroupItem } from "../components/ui/radio-group";
 
 function BuildOption({ build }: { build: FirmwareBuild }) {
+  const date = build.builtAt.slice(0, 10);
+
   return (
     <label className="hover:bg-accent/50 has-[[data-state=checked]]:border-primary flex cursor-pointer items-start gap-3 rounded-lg border p-4">
       <RadioGroupItem
         className="mt-1"
         value={build.id}
-        aria-label={`${build.name} ${build.version}, ${build.date}`}
+        aria-label={`${build.name} ${build.version}, ${date}`}
       />
       <span className="grid min-w-0 gap-1">
         <strong>
           {build.name} {build.version}
         </strong>
         <small className="text-sm">
-          <time dateTime={build.date}>{build.date}</time> /{" "}
+          <time dateTime={build.builtAt}>{date}</time> /{" "}
           <a
             className="font-mono"
             href={`https://github.com/salaman/tsv-lineage/commit/${build.sourceRevision}`}
@@ -55,7 +57,7 @@ export default function BuildSelector({ newest, older, selectedId, onSelect }: B
               Older builds
               {selectedOlder && (
                 <span className="text-muted-foreground group-data-[state=open]:hidden">
-                  ({selectedOlder.date} selected)
+                  ({selectedOlder.builtAt.slice(0, 10)} selected)
                 </span>
               )}
             </Button>
