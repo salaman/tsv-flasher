@@ -4,7 +4,7 @@ import type { Catalog } from "../shared/catalog";
 import { fetchCatalog } from "./catalog";
 import { Alert, AlertDescription } from "./components/ui/alert";
 import { Button } from "./components/ui/button";
-import { RadioGroup, RadioGroupItem } from "./components/ui/radio-group";
+import BuildSelector from "./ui/BuildSelector";
 import ConnectionChecks from "./ui/ConnectionChecks";
 import WorkflowSteps from "./ui/WorkflowSteps";
 import "./App.css";
@@ -149,7 +149,7 @@ export default function App() {
             </div>
           )}
           <section
-            className="step-panel"
+            className={loadingConnection ? "step-panel" : "step-panel image-step"}
             aria-labelledby={loadingConnection ? "connection-title" : "image-title"}
           >
             {loadingConnection ? (
@@ -173,69 +173,48 @@ export default function App() {
                 )}
               </>
             ) : (
-              <>
-                <h2 id="image-title">Select an image</h2>
+              <div className="grid gap-4">
+                <h2 className="mb-0" id="image-title">
+                  Select an image
+                </h2>
 
                 {catalogState.status === "loading" && (
-                  <p role="status">Loading available images...</p>
+                  <p className="mb-0" role="status">
+                    Loading available images...
+                  </p>
                 )}
                 {catalogState.status === "failed" && (
                   <>
-                    <Alert className="my-6" variant="destructive">
+                    <Alert variant="destructive">
                       <AlertDescription>{catalogState.error}</AlertDescription>
                     </Alert>
-                    <Button variant="outline" type="button" onClick={retryCatalog}>
+                    <Button
+                      className="justify-self-start"
+                      variant="outline"
+                      type="button"
+                      onClick={retryCatalog}
+                    >
                       Retry loading images
                     </Button>
                   </>
                 )}
-                {catalog && (
-                  <RadioGroup
-                    className="image-options"
-                    aria-labelledby="image-title"
-                    value={selectedId ?? ""}
-                    onValueChange={selectImage}
-                  >
-                    {catalog.builds.map((build) => (
-                      <label
-                        className="image-option hover:bg-accent/50 has-[[data-state=checked]]:border-primary rounded-lg border"
-                        key={build.id}
-                      >
-                        <RadioGroupItem
-                          value={build.id}
-                          aria-label={`${build.name} ${build.version}`}
-                        />
-                        <span>
-                          <strong>
-                            {build.name} {build.version}
-                          </strong>
-                          <small>
-                            {build.id} / <time dateTime={build.date}>{build.date}</time> /{" "}
-                            <a
-                              className="font-mono underline underline-offset-4"
-                              href={`https://github.com/salaman/tsv-lineage/commit/${build.sourceRevision}`}
-                              target="_blank"
-                              rel="noreferrer"
-                              aria-label={`View source commit ${build.sourceRevision} on GitHub`}
-                            >
-                              {build.sourceRevision.slice(0, 7)}
-                            </a>
-                          </small>
-                          <span>{build.description}</span>
-                        </span>
-                      </label>
-                    ))}
-                  </RadioGroup>
+                {catalogState.status === "ready" && (
+                  <BuildSelector
+                    newest={catalogState.catalog.builds[0]!}
+                    older={catalogState.catalog.builds.slice(1)}
+                    selectedId={catalogState.selectedId}
+                    onSelect={selectImage}
+                  />
                 )}
 
                 {browserIssue && (
-                  <Alert className="my-6">
+                  <Alert>
                     <AlertDescription>{browserIssue}</AlertDescription>
                   </Alert>
                 )}
 
                 {supported && !supportsBackup && (
-                  <Alert className="my-6">
+                  <Alert>
                     <AlertDescription>
                       This browser cannot save backups to a folder. You can continue without a
                       backup.
@@ -244,6 +223,7 @@ export default function App() {
                 )}
 
                 <Button
+                  className="justify-self-start"
                   type="button"
                   onClick={continueToDevice}
                   disabled={!supported || loading || !catalog || !selectedId}
@@ -251,7 +231,7 @@ export default function App() {
                   Continue
                   <ArrowRightIcon aria-hidden="true" focusable="false" />
                 </Button>
-              </>
+              </div>
             )}
           </section>
 

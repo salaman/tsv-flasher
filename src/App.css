@@ -98,35 +98,8 @@ footer {
   max-width: 780px;
   font-size: 0.92rem;
 }
-.image-options {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  min-width: 0;
-}
-.image-option {
-  display: flex;
-  gap: 1rem;
-  padding: 1.2rem;
-  margin: 1.3rem 0;
-  line-height: 1.5;
-  cursor: pointer;
-  overflow-wrap: anywhere;
-}
-.image-option > span {
-  min-width: 0;
-}
-.image-option [role="radio"] {
-  align-self: flex-start;
-  margin-top: 0.25rem;
-}
-.image-option > span > span,
-.image-option small {
-  display: block;
-  font-size: 0.86rem;
-}
-.image-option small {
-  margin: 0.25rem 0 0.7rem;
+.image-step {
+  min-height: 0;
 }
 .targets-table {
   margin: 1.5rem 0;

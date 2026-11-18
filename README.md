@@ -19,7 +19,8 @@ A WebUSB installer for [LineageOS on the Lenovo ThinkSmart View CD-18781Y](https
 
 ### Installation
 
-1. **Image:** choose a build and continue. The newest build is selected by default.
+1. **Image:** the newest build is selected by default. Expand **Older builds** if
+   you want to install an earlier version.
 2. **Connect & verify:** enter fresh EDL by powering off, holding both volume
    buttons, then powering on while holding them. Connect USB, select `QUSB__BULK`
    (`05c6:9008`), and let the installer verify hardware, storage and GPT.
